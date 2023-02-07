@@ -147,6 +147,10 @@ echo Starting Diskpart and executing following commands:
 echo:
 type tempFileFormatHelperDontDeleteIfRunning.txt
 
+
+::maybe add disk again, just to let user doublecheck
+
+
 @timeout /t 2 /nobreak>nul
 ::just for usability
 
