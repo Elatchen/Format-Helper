@@ -39,13 +39,17 @@ echo:
 echo Listing disks.
 echo:
 wmic diskdrive get model,size,mediaType,index | sort /r
+:: Init for Variable so just hitting enter doesn't produce valid data or so previously set variables don't count on just hitting enter. f is just a random input I chose
+set DEVICE_INDEX_TO_FORMAT=f
 set /p "DEVICE_INDEX_TO_FORMAT="Enter index number of disk you want to delete and format: "
-:: FIX BUG: SET VARIABLE BEFORE PROMPT, AS TO NOT REUSE LAST ACTION IF REPEATED
-:: FIX BUG: JUST HITTING THE ENTER KEY SELECTS DEVICE 0 THIS IS A BIG ISSUE
-:: DO SOME MORE TESTING FOR REPEATED EXECUTIONS AFTER FIXING
+:: FIX BUG: SET VARIABLE BEFORE PROMPT, AS TO NOT REUSE LAST ACTION IF REPEATED ---> Propably fixed
+:: FIX BUG: JUST HITTING THE ENTER KEY SELECTS DEVICE 0 THIS IS A BIG ISSUE ---> Propably fixed
+:: DO SOME MORE TESTING FOR REPEATED EXECUTIONS AFTER FIXING ---> still to do
 
 wmic diskdrive where( index like '%DEVICE_INDEX_TO_FORMAT%' ) get model,size,mediaType,index > tempFileFormatHelperDontDeleteIfRunning.txt
 
+:: Init for Variable so just hitting enter doesn't produce valid data or so previously set variables don't count on just hitting enter. f is just a random input I chose
+set FIRST_CHAR_TO_PARSE=f
 set /p FIRST_CHAR_TO_PARSE=< tempFileFormatHelperDontDeleteIfRunning.txt  
 if /i "%FIRST_CHAR_TO_PARSE:~2,2%" NEQ "I" goto ERRORDISKSELECT
 
@@ -54,6 +58,8 @@ echo Following disk will be deleted and formated.
 echo:
 type tempFileFormatHelperDontDeleteIfRunning.txt
 echo:
+:: Init for Variable so just hitting enter doesn't produce valid data or so previously set variables don't count on just hitting enter. f is just a random input I chose
+set YES_NO_DEVICE_SELECT=f
 set /p "YES_NO_DEVICE_SELECT=Are you sure you want to format this disk (Y to continue, any key to abort)? "
 IF /i "%YES_NO_DEVICE_SELECT%" NEQ "Y" GOTO START
 
@@ -103,6 +109,8 @@ echo Formating as %FILESYSTEM%.
 ::just for usability
 
 echo:
+:: Init for Variable so just hitting enter doesn't produce valid data or so previously set variables don't count on just hitting enter. f is just a random input I chose
+set FORMAT_SELECT_QUESTION=f
 set /p FORMAT_SELECT_QUESTION="Would you like to quick format (Y to quick format, any key to full format)? "
 IF /i "%FORMAT_SELECT_QUESTION%" NEQ "Y" GOTO FULLFORMAT
 
@@ -157,6 +165,8 @@ type tempFileFormatHelperDontDeleteIfRunning.txt
 echo:
 color 4
 echo Operation will start now. Are you sure you want to continue?
+:: Init for Variable so just hitting enter doesn't produce valid data or so previously set variables don't count on just hitting enter. f is just a random input I chose
+set LAST_CHANCE=f
 set /p LAST_CHANCE="THIS ACTION CANNOT BE REVERSED AND WILL RESULT IN DATA LOSS FOR SELECTED DISK  (Y to continue, any key to abort)? "
 IF /i "%LAST_CHANCE%" NEQ "Y" GOTO END
 color 7
@@ -191,6 +201,8 @@ del "tempFileFormatHelperDontDeleteIfRunning.txt" >nul 2>&1
 endlocal
 ::  ASK IF NEED TO RUN AGAIN
 echo:
+:: Init for Variable so just hitting enter doesn't produce valid data or so previously set variables don't count on just hitting enter. f is just a random input I chose
+set START_AGAIN=f
 set /p "START_AGAIN=Would you like to retry or format another disk (Y to continue, any key to close application)? "
 IF /i "%START_AGAIN%" EQU "Y" GOTO START
 
